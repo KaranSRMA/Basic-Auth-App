@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <title>Login & Register</title>
+</head>
+
+<body>
+    <!-- Login Form -->
+    <div id="login-container">
+        <div class="login-box">
+            <h2>Login</h2>
+            <form action="#" id="login-form">
+                <div class="input-container">
+                    <input type="text" id="login-user" name="username" placeholder="Email, username, phone" required>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="login-password" name="password" placeholder="Password" required>
+                </div>
+                <a href="/forgotpassword.html" class="forgot-password">Forgot Password?</a>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+            <div class="signup-link">
+                <p>Don't have an account? <a href="#">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signup-container">
+        <div class="signup-box">
+            <h2>SignUp</h2>
+            <form action="#" id="signup-form">
+                <div class="input-container">
+                    <input type="text" id="signup-username" name="username" placeholder="Create your username" required>
+                </div>
+                <div class="input-container">
+                    <input type="text" id="signup-email" name="email" placeholder="Enter your email"
+                        onchange="isverified(event)" required>
+                </div>
+
+                <div class="input-container displaynone" id="dispnone" onclick="resendemail(event)">
+                    <div>Verify Email</div>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" id="signup-phone" name="phone" placeholder="Enter your Phone number" required>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="signup-password" name="password" placeholder="Create your Password"
+                        required>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="signup-confirm-password" name="confirm-password"
+                        placeholder="Confirm your Password" required>
+                </div>
+                <button type="submit" class="login-btn">SignUp</button>
+            </form>
+            <div class="signup-link">
+                <p>Already have an account? <a href="#">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+</body>
+
+</html>

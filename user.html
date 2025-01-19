@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+</head>
+
+<body>
+    <h1>User Details</h1>
+
+    <p><strong>Username:</strong> <span id="username"></span></p>
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Phone:</strong> <span id="phone"></span></p>
+
+    <button onclick="logout()">Logout</button>
+
+    <script>
+        // Function to handle logout
+        function logout() {
+            // Remove user data from localStorage
+            localStorage.removeItem('jwt_token');
+
+            // Redirect to login page
+            window.location.href = '/';  // Redirect to login page
+        }
+
+        // Function to load user details from backend
+        async function loadUserDetails() {
+            const token = localStorage.getItem('jwt_token');
+
+            if (!token) {
+                // If no token is found, redirect to login
+                window.location.href = '/';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/user', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`  // Send the token in the Authorization header
+                    }
+                });
+
+                if (!response.ok) {
+                    tostr.error("Failed to fetch data")
+                }
+
+                else {
+
+                    const data = await response.json();
+
+                    document.title = data.username
+                    // Populate user details in the HTML
+                    document.getElementById('username').textContent = data.username;
+                    document.getElementById('email').textContent = data.email;
+                    document.getElementById('phone').textContent = data.phone;
+                }
+            } catch (error) {
+                console.error(error);
+                window.location.href = '/';  // Redirect to login page if error occurs
+            }
+        }
+
+        // Load user details when the page is loaded
+        window.onload = loadUserDetails;
+    </script>
+</body>
+
+</html>
