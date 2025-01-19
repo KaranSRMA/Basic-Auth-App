@@ -59,8 +59,10 @@ function verifyToken(req, res, next) {
 
 // Route to get user data
 app.get('/user', verifyToken, async (req, res) => {
+
     try {
         const user = await User.findById(req.userId);  // Find user by the userId decoded from the token
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -260,13 +262,16 @@ app.post('/login', async (req, res) => {
         users = await User.findOne({ username: username });
     }
 
-    if (!users) return res.status(403).json('User not found');
+    if (!users) return res.status(403).json({message:'User not found'});
+    if (!users.verified){
+        return res.status(403).json({message:'User not verified'})
+    }
 
     const isMatch = await bcrypt.compare(password, users.password);
-    if (!isMatch) return res.status(401).json('Invalid credentials');
+    if (!isMatch) return res.status(401).json({message:'Invalid credentials'});
 
     // Create JWT token
-    const token = jwt.sign({ userId: users._id }, 'your_jwt_secret', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: users._id }, 'your_jwt_secret', { expiresIn: '1m' });
 
     res.status(200).json({ token });
 });

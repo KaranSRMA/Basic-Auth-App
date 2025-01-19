@@ -3,7 +3,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
     const username = document.getElementById('login-user').value;
     const password = document.getElementById('login-password').value;
-
+    
     const response = await fetch('http://localhost:5000/login', {
         method: 'POST',
         headers: {
@@ -23,7 +23,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         // Redirect to a new page or show the user details page
         window.location.href = '/user.html';  // Redirect to user details page
     } else {
-        toastr.error(data || 'Login failed. Please try again.');
+        toastr.error(data.message || 'Login failed. Please try again.');
     }
 });
 
