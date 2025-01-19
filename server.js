@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');  // Import nodemailer
 const crypto = require('crypto');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
 const PORT = 5000;
@@ -20,7 +21,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/login_register_db')
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
@@ -79,14 +80,17 @@ app.get('/user', verifyToken, async (req, res) => {
 });
 
 // Create a reusable transport object using Mailtrap SMTP service
+
 const transporter = nodemailer.createTransport({
-    host: 'sandbox.smtp.mailtrap.io',
+    host: 'smtp.gmail.com',
     port: 587,
+    secure:false,
     auth: {
-        user: '37812f13c81123',  // Replace with your Mailtrap username
-        pass: 'f6eb8f7a5001d8'   // Replace with your Mailtrap password
+        user: process.env.USER,  // Replace with your Mailtrap username
+        pass: process.env.PASS   // Replace with your Mailtrap password
     }
 });
+
 
 // Forgot password route
 app.post('/forgot-password', async (req, res) => {
@@ -230,7 +234,7 @@ app.post('/register', async (req, res) => {
         const newUser = new User({ username, email, phone, password: hashedPassword, verificationToken, verificationExpiry });
         await newUser.save();
 
-        transporter.sendMail(mailOptions)
+        await transporter.sendMail(mailOptions)
         newUser.verificationAttempts += 1
         await newUser.save()
         res.status(200).json({ message: 'Verification link send to your email' }); // Return a success response as JSON
@@ -262,13 +266,13 @@ app.post('/login', async (req, res) => {
         users = await User.findOne({ username: username });
     }
 
-    if (!users) return res.status(403).json({message:'User not found'});
-    if (!users.verified){
-        return res.status(403).json({message:'User not verified'})
+    if (!users) return res.status(403).json({ message: 'User not found' });
+    if (!users.verified) {
+        return res.status(403).json({ message: 'User not verified' })
     }
 
     const isMatch = await bcrypt.compare(password, users.password);
-    if (!isMatch) return res.status(401).json({message:'Invalid credentials'});
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     // Create JWT token
     const token = jwt.sign({ userId: users._id }, 'your_jwt_secret', { expiresIn: '1m' });
@@ -294,7 +298,7 @@ app.post('/verification', async (req, res) => {
         user.verified = true;
         user.verificationToken = undefined;
         user.verificationExpiry = undefined;
-        user.verificationAttempts=undefined
+        user.verificationAttempts = undefined
         await user.save();
         return res.status(200).json({ message: 'User verified successfully' });
     } catch (error) {
