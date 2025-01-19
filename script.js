@@ -4,7 +4,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const username = document.getElementById('login-user').value;
     const password = document.getElementById('login-password').value;
     
-    const response = await fetch('http://localhost:5000/login', {
+    const response = await fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ async function isverified(e) {
     const email = e.target.value;
     const message = document.getElementById('dispnone');
 
-    const response = await fetch('http://localhost:5000/isverifieduser', {
+    const response = await fetch('/isverifieduser', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ async function isverified(e) {
 
 async function resendemail(e) {
     const email = document.getElementById('signup-email').value;
-    const respone = await fetch('http://localhost:5000/resendMail', {
+    const respone = await fetch('/resendMail', {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
     }
 
     // Proceed with the registration API call if both validations pass
-    const response = await fetch('http://localhost:5000/register', {
+    const response = await fetch('/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

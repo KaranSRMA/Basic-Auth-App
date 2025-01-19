@@ -30,7 +30,7 @@ document.getElementById('forgot-password-form').addEventListener('submit', async
 
     const email = document.getElementById('email').value;
 
-    const response = await fetch('http://localhost:5000/forgot-password', {
+    const response = await fetch('/forgot-password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ const button = document.getElementById('verified');
 
 button.addEventListener('click', async function () {
     // Send a POST request to the server
-    const response = await fetch('http://localhost:5000/verification', {
+    const response = await fetch('/verification', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
