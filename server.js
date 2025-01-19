@@ -307,6 +307,8 @@ app.post('/verification', async (req, res) => {
 })
 
 
+
+
 app.post('/isverifieduser', async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
