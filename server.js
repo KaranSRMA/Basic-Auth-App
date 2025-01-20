@@ -150,7 +150,7 @@ app.get('/reset', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-    res.sendFile("index.html", { root: __dirname })
+    res.sendFile("/index.html", { root: __dirname })
 })
 
 // Reset password route
@@ -373,7 +373,7 @@ app.post('/resendMail', async (req, res) => {
 })
 
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'static', 'notfound.html'));  // Serve custom 404 page from 'static' folder
+    res.status(404).sendFile(path.join(__dirname, 'public', '/notfound.html'));  // Serve custom 404 page from 'static' folder
 });
 
 // Other routes...
