@@ -93,7 +93,12 @@ const transporter = nodemailer.createTransport({
 
 // Forgot password route
 app.post('/forgot-password', async (req, res) => {
-    const { email } = req.body;
+    let { email } = req.body;
+    email = email.trim();
+
+    if (email === ""){
+        return res.status(400).json({message: 'This field cant be empty'})
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -116,14 +121,23 @@ app.post('/forgot-password', async (req, res) => {
         user.resetTokenExpires = Date.now() + 3600000; // 1 hour expiry
         await user.save();
 
-        const resetLink = `http://localhost:5000/reset?email=${email}&token=${resetToken}`;
-
+        const resetLink = `https://basic-auth-app-six.vercel.app/reset?email=${email}&token=${resetToken}`;
+        const htmlContent = `
+        <html>
+        <body>
+            <h1>Welcome to Our Service</h1>
+            <p>Hello,</p>
+            <p>Click the link below to reset your password:</p>
+            <a href="${resetLink}" target="_blank">Verify Account</a>
+        </body>
+        </html>
+    `;
         // Send reset email using Mailtrap SMTP
         const mailOptions = {
             from: 'no@reply.com',  // Replace with your sender email
             to: email,
             subject: 'Password Reset Request',
-            text: `Click here to reset your password: ${resetLink}`
+            html: htmlContent
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -155,7 +169,13 @@ app.get('/', (req, res) => {
 
 // Reset password route
 app.post('/reset-password', async (req, res) => {
-    const { email, token, newPassword } = req.body;
+    let { email, token, newPassword } = req.body;
+    email = email.trim();
+    newPassword = newPassword.trim();
+
+    if (email === "" || newPassword === ""){
+        return res.status(400).json({message:'This field cant be empty'})
+    }
 
     try {
         const user = await User.findOne({ email, resetToken: token });
@@ -183,7 +203,25 @@ app.post('/reset-password', async (req, res) => {
 
 // Register route
 app.post('/register', async (req, res) => {
-    const { username, email, phone, password, confirmpassword } = req.body;
+    let { username, email, phone, password, confirmpassword } = req.body;
+    username = username.trim();
+    email = email.trim();
+    phone = phone.trim();
+    password = password.trim();
+    confirmpassword = confirmpassword.trim();
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+
+    if (email === "" || phone === "" || password === "" || username === ""){
+        return res.status(400).json({message:"Input field cant be empty"})
+    }
+
+    if (!usernameRegex.test(username)){
+        return res.status(400).json({message:'Username only contains letters, numbers and underscore'})
+    }
+
+    if (password.length < 6){
+        return res.status(400).json({message:"Password must be at least 6 character long"})
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({
@@ -196,7 +234,7 @@ app.post('/register', async (req, res) => {
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpiry = Date.now() + 3600000; // 1 hour expiry
 
-    const verifyLink = `https://basic-auth-app-six.vercel.app//verify?email=${email}&token=${verificationToken}`;
+    const verifyLink = `https://basic-auth-app-six.vercel.app/verify?email=${email}&token=${verificationToken}`;
     const htmlContent = `
         <html>
         <body>
@@ -245,7 +283,14 @@ app.post('/register', async (req, res) => {
 
 // Login route
 app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
+    username = username.trim();
+    password = password.trim();
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+
+    if (!usernameRegex.test(username)){
+        return res.status(400).json({message:'Username only contains letters, numbers and underscore'})
+    }
 
     // Ensure password and userIdentifier are provided
     if (!password || !username) {
@@ -329,7 +374,7 @@ app.post('/resendMail', async (req, res) => {
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpiry = Date.now() + 3600000; // 1 hour expiry
 
-    const verifyLink = `https://basic-auth-app-six.vercel.app//verify?email=${email}&token=${verificationToken}`;
+    const verifyLink = `https://basic-auth-app-six.vercel.app/verify?email=${email}&token=${verificationToken}`;
     const htmlContent = `
         <html>
         <body>
