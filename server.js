@@ -146,11 +146,11 @@ app.post('/forgot-password', async (req, res) => {
 
 
 app.get('/reset', (req, res) => {
-    res.sendFile('/reset.html', { root: __dirname })
+    res.sendFile(path.join(__dirname, 'public', '/reset.html'));
 })
 
 app.get('/', (req, res) => {
-    res.sendFile("/index.html", { root: __dirname })
+    res.sendFile(path.join(__dirname, 'public', '/index.html'));
 })
 
 // Reset password route
@@ -196,7 +196,7 @@ app.post('/register', async (req, res) => {
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpiry = Date.now() + 3600000; // 1 hour expiry
 
-    const verifyLink = `http://localhost:5000/verify?email=${email}&token=${verificationToken}`;
+    const verifyLink = `https://basic-auth-app-six.vercel.app//verify?email=${email}&token=${verificationToken}`;
     const htmlContent = `
         <html>
         <body>
@@ -282,7 +282,7 @@ app.post('/login', async (req, res) => {
 
 //verification on registering 
 app.get('/verify', (req, res) => {
-    res.sendFile('/verify.html', { root: __dirname })
+    res.sendFile(path.join(__dirname, 'public', 'verify.html'));
 })
 
 
@@ -329,7 +329,7 @@ app.post('/resendMail', async (req, res) => {
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpiry = Date.now() + 3600000; // 1 hour expiry
 
-    const verifyLink = `http://localhost:5000/verify?email=${email}&token=${verificationToken}`;
+    const verifyLink = `https://basic-auth-app-six.vercel.app//verify?email=${email}&token=${verificationToken}`;
     const htmlContent = `
         <html>
         <body>
