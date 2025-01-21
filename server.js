@@ -83,7 +83,7 @@ app.get('/user', verifyToken, async (req, res) => {
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
-    secure:false,
+    secure: false,
     auth: {
         user: process.env.USER,  // Replace with your Mailtrap username
         pass: process.env.PASS   // Replace with your Mailtrap password
@@ -96,8 +96,8 @@ app.post('/forgot-password', async (req, res) => {
     let { email } = req.body;
     email = email.trim();
 
-    if (email === ""){
-        return res.status(400).json({message: 'This field cant be empty'})
+    if (email === "") {
+        return res.status(400).json({ message: 'This field cant be empty' })
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -173,8 +173,8 @@ app.post('/reset-password', async (req, res) => {
     email = email.trim();
     newPassword = newPassword.trim();
 
-    if (email === "" || newPassword === ""){
-        return res.status(400).json({message:'This field cant be empty'})
+    if (email === "" || newPassword === "") {
+        return res.status(400).json({ message: 'This field cant be empty' })
     }
 
     try {
@@ -211,16 +211,16 @@ app.post('/register', async (req, res) => {
     confirmpassword = confirmpassword.trim();
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
-    if (email === "" || phone === "" || password === "" || username === ""){
-        return res.status(400).json({message:"Input field cant be empty"})
+    if (email === "" || phone === "" || password === "" || username === "") {
+        return res.status(400).json({ message: "Input field cant be empty" })
     }
 
-    if (!usernameRegex.test(username)){
-        return res.status(400).json({message:'Username only contains letters, numbers and underscore'})
+    if (!usernameRegex.test(username)) {
+        return res.status(400).json({ message: 'Username only contains letters, numbers and underscore' })
     }
 
-    if (password.length < 6){
-        return res.status(400).json({message:"Password must be at least 6 character long"})
+    if (password.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 character long" })
     }
 
     // Check if user already exists
@@ -288,8 +288,8 @@ app.post('/login', async (req, res) => {
     password = password.trim();
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
 
-    if (!usernameRegex.test(username)){
-        return res.status(400).json({message:'Username only contains letters, numbers and underscore'})
+    if (!usernameRegex.test(username)) {
+        return res.status(400).json({ message: 'Username only contains letters, numbers and underscore' })
     }
 
     // Ensure password and userIdentifier are provided
@@ -319,7 +319,7 @@ app.post('/login', async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     // Create JWT token
-    const token = jwt.sign({ userId: users._id }, 'your_jwt_secret', { expiresIn: '1m' });
+    const token = jwt.sign({ userId: users._id, email:users.email }, '9e4c3177c5a274da80e23e7c21a2cb67d29e6ab2544b3ff33b2062f38fd8905723c982eea276453c7b6b8b80b6b29edb', { expiresIn: '1m' });
 
     res.status(200).json({ token });
 });
