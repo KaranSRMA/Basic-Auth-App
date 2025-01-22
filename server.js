@@ -49,7 +49,7 @@ function verifyToken(req, res, next) {
     }
 
     try {
-        const decoded = jwt.verify(token, 'your_jwt_secret');  // Verify token
+        const decoded = jwt.verify(token, '9e4c3177c5a274da80e23e7c21a2cb67d29e6ab2544b3ff33b2062f38fd8905723c982eea276453c7b6b8b80b6b29edb');  // Verify token
         req.userId = decoded.userId;  // Store userId in request object
         next();  // Continue to the next middleware or route handler
     } catch (err) {
@@ -319,7 +319,7 @@ app.post('/login', async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     // Create JWT token
-    const token = jwt.sign({ userId: users._id, email:users.email }, '9e4c3177c5a274da80e23e7c21a2cb67d29e6ab2544b3ff33b2062f38fd8905723c982eea276453c7b6b8b80b6b29edb', { expiresIn: '1m' });
+    const token = jwt.sign({ userId: users._id, email:users.email }, '9e4c3177c5a274da80e23e7c21a2cb67d29e6ab2544b3ff33b2062f38fd8905723c982eea276453c7b6b8b80b6b29edb', { expiresIn: '24h' });
 
     res.status(200).json({ token });
 });
